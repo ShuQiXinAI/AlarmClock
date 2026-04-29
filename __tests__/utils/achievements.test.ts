@@ -50,6 +50,18 @@ describe('checkAchievements', () => {
     const result = checkAchievements(stats, '07:00', 'blink', 0);
     expect(result).toContain(ACHIEVEMENT_IDS.BLINK_50);
   });
+
+  it('awards shake_10k at 10000 shake unlocks', () => {
+    const stats = { ...baseStats, methodCounts: { math: 0, blink: 0, shake: 10000 } };
+    const result = checkAchievements(stats, '07:00', 'shake', 0);
+    expect(result).toContain(ACHIEVEMENT_IDS.SHAKE_10K);
+  });
+
+  it('awards streak_30 at 30 streak days', () => {
+    const stats = { ...baseStats, streakDays: 30 };
+    const result = checkAchievements(stats, '07:00', 'math', 0);
+    expect(result).toContain(ACHIEVEMENT_IDS.STREAK_30);
+  });
 });
 
 describe('checkHardSleeper', () => {
