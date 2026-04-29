@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS } from '../theme/colors';
 import HomeScreen from '../screens/HomeScreen';
 import EditAlarmScreen from '../screens/EditAlarmScreen';
+import RingingScreen from '../screens/RingingScreen';
 
 // ─── Param Lists ────────────────────────────────────────────────────────────
 
@@ -32,11 +33,6 @@ const StatsScreen = () => (
 );
 
 
-const RingingScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>RingingScreen</Text>
-  </View>
-);
 
 const MathUnlockScreen = () => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
