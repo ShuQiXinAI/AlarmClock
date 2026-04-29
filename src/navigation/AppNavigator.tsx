@@ -6,6 +6,7 @@ import { COLORS } from '../theme/colors';
 import HomeScreen from '../screens/HomeScreen';
 import EditAlarmScreen from '../screens/EditAlarmScreen';
 import RingingScreen from '../screens/RingingScreen';
+import MathUnlockScreen from '../screens/MathUnlockScreen';
 
 // ─── Param Lists ────────────────────────────────────────────────────────────
 
@@ -34,11 +35,6 @@ const StatsScreen = () => (
 
 
 
-const MathUnlockScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>MathUnlockScreen</Text>
-  </View>
-);
 
 const ShakeUnlockScreen = () => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
