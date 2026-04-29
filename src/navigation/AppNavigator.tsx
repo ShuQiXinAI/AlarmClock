@@ -8,6 +8,7 @@ import EditAlarmScreen from '../screens/EditAlarmScreen';
 import RingingScreen from '../screens/RingingScreen';
 import MathUnlockScreen from '../screens/MathUnlockScreen';
 import ShakeUnlockScreen from '../screens/ShakeUnlockScreen';
+import BlinkUnlockScreen from '../screens/BlinkUnlockScreen';
 
 // ─── Param Lists ────────────────────────────────────────────────────────────
 
@@ -35,12 +36,6 @@ const StatsScreen = () => (
 );
 
 
-
-const BlinkUnlockScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>BlinkUnlockScreen</Text>
-  </View>
-);
 
 const SuccessScreen = () => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
