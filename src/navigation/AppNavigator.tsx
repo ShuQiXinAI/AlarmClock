@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS } from '../theme/colors';
@@ -9,6 +9,8 @@ import RingingScreen from '../screens/RingingScreen';
 import MathUnlockScreen from '../screens/MathUnlockScreen';
 import ShakeUnlockScreen from '../screens/ShakeUnlockScreen';
 import BlinkUnlockScreen from '../screens/BlinkUnlockScreen';
+import SuccessScreen from '../screens/SuccessScreen';
+import StatsScreen from '../screens/StatsScreen';
 
 // ─── Param Lists ────────────────────────────────────────────────────────────
 
@@ -26,22 +28,6 @@ export type RootStackParamList = {
   BlinkUnlock: { alarmId: string };
   Success: undefined;
 };
-
-// ─── Placeholder Screens ─────────────────────────────────────────────────────
-
-const StatsScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>StatsScreen</Text>
-  </View>
-);
-
-
-
-const SuccessScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>SuccessScreen</Text>
-  </View>
-);
 
 // ─── Navigators ──────────────────────────────────────────────────────────────
 
