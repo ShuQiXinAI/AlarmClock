@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alarm } from '../types';
-import { scheduleAlarm, cancelAlarm } from '../services/notifeeService';
+import { scheduleAlarm, cancelAlarm, rescheduleAllAlarms } from '../services/notifeeService';
 
 interface AlarmStore {
   alarms: Alarm[];
@@ -10,6 +10,7 @@ interface AlarmStore {
   updateAlarm: (alarm: Alarm) => Promise<void>;
   deleteAlarm: (id: string) => Promise<void>;
   toggleAlarm: (id: string, active: boolean) => Promise<void>;
+  rescheduleAll: () => Promise<void>;
 }
 
 export const useAlarmStore = create<AlarmStore>()(
@@ -49,6 +50,11 @@ export const useAlarmStore = create<AlarmStore>()(
         set(s => ({
           alarms: s.alarms.map(a => a.id === id ? { ...a, active, notifeeJobId } : a),
         }));
+      },
+
+      rescheduleAll: async () => {
+        const { alarms } = get();
+        await rescheduleAllAlarms(alarms);
       },
     }),
     { name: 'alarm-store', storage: createJSONStorage(() => AsyncStorage) },

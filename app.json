@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "叫不醒你不罢休",
-    "slug": "alarm-clock-app",
+    "slug": "alarm-clock",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,13 +19,39 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.alarmclock.app"
+      "package": "com.alarmclock.app",
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED",
+        "USE_EXACT_ALARM",
+        "SCHEDULE_EXACT_ALARM",
+        "VIBRATE",
+        "WAKE_LOCK",
+        "CAMERA",
+        "RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "@notifee/react-native",
+        {
+          "android": {
+            "permissions": [
+              "POST_NOTIFICATIONS",
+              "USE_EXACT_ALARM",
+              "SCHEDULE_EXACT_ALARM",
+              "RECEIVE_BOOT_COMPLETED",
+              "VIBRATE",
+              "WAKE_LOCK"
+            ]
+          }
+        }
+      ],
+      "expo-camera",
+      "expo-av"
     ],
     "sdkVersion": "51.0.0"
   }

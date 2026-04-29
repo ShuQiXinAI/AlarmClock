@@ -44,3 +44,18 @@ export async function scheduleAlarm(alarm: Alarm): Promise<string> {
 export async function cancelAlarm(notifeeJobId: string): Promise<void> {
   await notifee.cancelTriggerNotification(notifeeJobId);
 }
+
+export async function rescheduleAllAlarms(alarms: Alarm[]): Promise<void> {
+  // For each active alarm, cancel existing trigger and reschedule
+  for (const alarm of alarms) {
+    if (!alarm.active) continue;
+    try {
+      if (alarm.notifeeJobId) {
+        await notifee.cancelTriggerNotification(alarm.notifeeJobId);
+      }
+      await scheduleAlarm(alarm);
+    } catch (e) {
+      // silently continue if one alarm fails
+    }
+  }
+}
