@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS } from '../theme/colors';
 import HomeScreen from '../screens/HomeScreen';
+import EditAlarmScreen from '../screens/EditAlarmScreen';
 
 // ─── Param Lists ────────────────────────────────────────────────────────────
 
@@ -30,11 +31,6 @@ const StatsScreen = () => (
   </View>
 );
 
-const EditAlarmScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>EditAlarmScreen</Text>
-  </View>
-);
 
 const RingingScreen = () => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
