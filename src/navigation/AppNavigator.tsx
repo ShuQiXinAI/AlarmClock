@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS } from '../theme/colors';
+import HomeScreen from '../screens/HomeScreen';
 
 // ─── Param Lists ────────────────────────────────────────────────────────────
 
@@ -22,12 +23,6 @@ export type RootStackParamList = {
 };
 
 // ─── Placeholder Screens ─────────────────────────────────────────────────────
-
-const HomeScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>HomeScreen</Text>
-  </View>
-);
 
 const StatsScreen = () => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
