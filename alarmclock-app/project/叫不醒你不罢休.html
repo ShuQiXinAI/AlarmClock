@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>叫不醒你不罢休 · 花式闹钟</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+
+    @keyframes bell-shake {
+      0%,100% { transform: rotate(-12deg) scale(1.05); }
+      50%      { transform: rotate(12deg)  scale(1.05); }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: translate(-50%,-50%) scale(0.7); opacity: 0.9; }
+      100% { transform: translate(-50%,-50%) scale(1.5); opacity: 0; }
+    }
+    @keyframes phone-shake {
+      0%   { transform: translateX(-7px) rotate(-4deg); }
+      25%  { transform: translateX( 7px) rotate( 4deg); }
+      50%  { transform: translateX(-5px) rotate(-2deg); }
+      75%  { transform: translateX( 5px) rotate( 2deg); }
+      100% { transform: translateX(-7px) rotate(-4deg); }
+    }
+    @keyframes shake {
+      0%,100%         { transform: translateX(0); }
+      10%,30%,50%,70%,90% { transform: translateX(-7px); }
+      20%,40%,60%,80%     { transform: translateX( 7px); }
+    }
+    @keyframes pop-in {
+      0%   { transform: scale(0.3) rotate(-20deg); opacity: 0; }
+      60%  { transform: scale(1.2) rotate(5deg);  opacity: 1; }
+      100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+    }
+    @keyframes scan-bar {
+      0%   { top: 10%; }
+      50%  { top: 88%; }
+      100% { top: 10%; }
+    }
+    @keyframes bounce-in {
+      0%   { transform: scale(0.5); opacity: 0; }
+      60%  { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #c4beee; border-radius: 2px; }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="ios-frame.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="alarm-components.jsx"></script>
+  <script type="text/babel" src="alarm-home.jsx"></script>
+  <script type="text/babel" src="alarm-unlock.jsx"></script>
+  <script type="text/babel" src="alarm-stats.jsx"></script>
+  <script type="text/babel" src="alarm-main.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
