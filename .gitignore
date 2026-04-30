@@ -12,9 +12,9 @@ yarn-error.log*
 dist/
 web-build/
 
-# Native builds
-android/
-ios/
+# Native build output at project root only — keep modules/*/android sources
+/android/
+/ios/
 
 # Environment
 .env

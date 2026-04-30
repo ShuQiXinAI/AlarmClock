@@ -1,47 +1,43 @@
-import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av';
 import { Vibration, Platform } from 'react-native';
+import { requireNativeModule } from 'expo-modules-core';
 import notifee from '@notifee/react-native';
 
-let currentSound: Audio.Sound | null = null;
 let currentAlarmId: string | null = null;
+let nativePlaying = false;
 
 const VIBRATE_PATTERN = [0, 600, 400, 600, 400];
 
-async function configureAudioMode(): Promise<void> {
-  await Audio.setAudioModeAsync({
-    allowsRecordingIOS: false,
-    interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-    playsInSilentModeIOS: true,
-    shouldDuckAndroid: false,
-    interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-    staysActiveInBackground: true,
-  });
+// Lazy-load the native module so dev / web builds don't crash if it's
+// absent. In a release Android build, this resolves to the real module
+// that plays the system alarm tone on the alarm audio stream.
+let AlarmSoundNative: { play(): void; stop(): void } | null = null;
+try {
+  AlarmSoundNative = requireNativeModule('AlarmSound');
+} catch {
+  AlarmSoundNative = null;
 }
 
 export async function startAlarm(alarmId: string): Promise<void> {
-  if (currentAlarmId === alarmId && currentSound) return;
+  if (currentAlarmId === alarmId && nativePlaying) return;
 
   await stopAlarm();
 
   currentAlarmId = alarmId;
 
-  // Once the app is driving the alarm, the system notification's own sound
-  // is no longer needed. Cancel the displayed notification so it doesn't
-  // ring on top of the app audio. (The trigger has already fired, so this
-  // does not affect future scheduled alarms.)
+  // Cancel the displayed notification so its sound doesn't double up
+  // with the alarm we're about to start. The trigger has already fired,
+  // so this won't affect future scheduled alarms.
   try {
     await notifee.cancelDisplayedNotification(alarmId);
   } catch {}
 
-  try {
-    await configureAudioMode();
-    const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/sounds/alarm.mp3'),
-      { isLooping: true, shouldPlay: true, volume: 1.0 },
-    );
-    currentSound = sound;
-  } catch {
-    // audio resource missing — fall back to vibration only
+  if (AlarmSoundNative) {
+    try {
+      AlarmSoundNative.play();
+      nativePlaying = true;
+    } catch {
+      nativePlaying = false;
+    }
   }
 
   if (Platform.OS === 'android') {
@@ -52,14 +48,11 @@ export async function startAlarm(alarmId: string): Promise<void> {
 export async function stopAlarm(alarmId?: string): Promise<void> {
   Vibration.cancel();
 
-  if (currentSound) {
+  if (AlarmSoundNative && nativePlaying) {
     try {
-      await currentSound.stopAsync();
+      AlarmSoundNative.stop();
     } catch {}
-    try {
-      await currentSound.unloadAsync();
-    } catch {}
-    currentSound = null;
+    nativePlaying = false;
   }
 
   const target = alarmId ?? currentAlarmId;

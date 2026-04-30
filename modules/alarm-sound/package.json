@@ -1,0 +1,7 @@
+{
+  "name": "alarm-sound",
+  "version": "1.0.0",
+  "description": "Plays the system default alarm tone on the alarm audio stream.",
+  "main": "index.ts",
+  "private": true
+}

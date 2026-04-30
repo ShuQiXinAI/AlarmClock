@@ -12,10 +12,10 @@ import { getNextTriggerTimestamp } from '../utils/alarmTime';
 export async function setupNotifee(): Promise<void> {
   await notifee.requestPermission();
 
-  // The notification itself is treated as a wakeup trigger only — the app
-  // plays alarm audio via expo-av once it launches. The channel keeps a
-  // default sound as a safety net for the moment between trigger fire and
-  // app launch.
+  // The notification itself is mainly a wakeup trigger — the app plays
+  // alarm audio via the native AlarmSound module on the alarm audio
+  // stream once it launches. The channel keeps a default sound as a brief
+  // safety net for the moment between trigger fire and app launch.
   await notifee.createChannel({
     id: 'alarm',
     name: '闹钟',
