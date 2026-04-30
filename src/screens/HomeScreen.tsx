@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { COLORS } from '../theme/colors';
 import AlarmCard from '../components/AlarmCard';
 import { useAlarmStore } from '../store/alarmStore';
+import { openAlarmPermissionSettings } from '../services/notifeeService';
 
 type AlarmState = Parameters<Parameters<typeof useAlarmStore>[0]>[0];
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -21,9 +22,14 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>叫不醒你不罢休</Text>
-        <Pressable onPress={() => navigation.navigate('EditAlarm', {})}>
-          <Text style={styles.addButton}>+</Text>
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable onPress={openAlarmPermissionSettings} style={styles.permButton}>
+            <Text style={styles.permButtonText}>权限</Text>
+          </Pressable>
+          <Pressable onPress={() => navigation.navigate('EditAlarm', {})}>
+            <Text style={styles.addButton}>+</Text>
+          </Pressable>
+        </View>
       </View>
 
       {/* Alarm list */}
@@ -71,6 +77,23 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: COLORS.primary,
     lineHeight: 36,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  permButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  permButtonText: {
+    fontSize: 13,
+    color: COLORS.primary,
+    fontWeight: '700',
   },
   separator: {
     height: 10,
