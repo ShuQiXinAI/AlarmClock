@@ -19,6 +19,7 @@ import {
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useStatsStore } from '../store/statsStore';
 import { useBlink, FaceDetectionResult } from '../hooks/useBlink';
+import { stopAlarm } from '../services/alarmAudio';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -37,7 +38,7 @@ const ACCENT_BRIGHT = '#A87FFF';
 export default function BlinkUnlockScreen() {
   const route = useRoute<BlinkUnlockRoute>();
   const navigation = useNavigation<BlinkUnlockNav>();
-  const { alarmId: _alarmId } = route.params;
+  const { alarmId } = route.params;
 
   const recordSuccess = useStatsStore(s => s.recordSuccess);
 
@@ -53,12 +54,13 @@ export default function BlinkUnlockScreen() {
       const next = prev + 1;
       if (next >= TARGET_BLINKS) {
         completedRef.current = true;
+        stopAlarm(alarmId);
         recordSuccess('blink');
         navigation.navigate('Success');
       }
       return next;
     });
-  }, [recordSuccess, navigation]);
+  }, [alarmId, recordSuccess, navigation]);
 
   const { hasPermission, onFacesDetected } = useBlink(handleBlink);
 

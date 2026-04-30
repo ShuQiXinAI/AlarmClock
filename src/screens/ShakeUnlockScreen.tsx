@@ -12,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useStatsStore } from '../store/statsStore';
 import { useShake } from '../hooks/useShake';
+import { stopAlarm } from '../services/alarmAudio';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -30,7 +31,7 @@ const SHAKE_COLOR_BRIGHT = '#FF9F1C';
 export default function ShakeUnlockScreen() {
   const route = useRoute<ShakeUnlockRoute>();
   const navigation = useNavigation<ShakeUnlockNav>();
-  const { alarmId: _alarmId } = route.params;
+  const { alarmId } = route.params;
 
   const recordSuccess = useStatsStore(s => s.recordSuccess);
 
@@ -89,12 +90,13 @@ export default function ShakeUnlockScreen() {
       if (next >= TARGET_SHAKES) {
         completedRef.current = true;
         pulseLoop.current?.stop();
+        stopAlarm(alarmId);
         recordSuccess('shake');
         navigation.navigate('Success');
       }
       return next;
     });
-  }, [recordSuccess, navigation]);
+  }, [alarmId, recordSuccess, navigation]);
 
   useShake(handleShake);
 

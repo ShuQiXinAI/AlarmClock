@@ -16,6 +16,7 @@ import BackButton from '../components/BackButton';
 import { useAlarmStore } from '../store/alarmStore';
 import { useStatsStore } from '../store/statsStore';
 import { generateQuestion } from '../utils/mathChallenge';
+import { stopAlarm } from '../services/alarmAudio';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -48,6 +49,7 @@ export default function MathUnlockScreen() {
 
     if (userAnswer === currentQuestion.answer) {
       // Correct answer
+      stopAlarm(alarmId);
       const method = alarm?.method ?? 'math';
       recordSuccess(method, consecutiveMathCorrect + 1);
       navigation.navigate('Success');

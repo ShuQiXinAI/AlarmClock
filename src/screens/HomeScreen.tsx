@@ -5,7 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { COLORS } from '../theme/colors';
 import AlarmCard from '../components/AlarmCard';
 import { useAlarmStore } from '../store/alarmStore';
-import { openAlarmPermissionSettings } from '../services/notifeeService';
+import notifee from '@notifee/react-native';
 
 type AlarmState = Parameters<Parameters<typeof useAlarmStore>[0]>[0];
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -23,8 +23,8 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>叫不醒你不罢休</Text>
         <View style={styles.headerActions}>
-          <Pressable onPress={openAlarmPermissionSettings} style={styles.permButton}>
-            <Text style={styles.permButtonText}>权限</Text>
+          <Pressable onPress={() => notifee.openNotificationSettings()} style={styles.permButton}>
+            <Text style={styles.permButtonText}>通知设置</Text>
           </Pressable>
           <Pressable onPress={() => navigation.navigate('EditAlarm', {})}>
             <Text style={styles.addButton}>+</Text>

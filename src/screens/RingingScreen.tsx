@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,13 @@ import {
 } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Audio } from 'expo-av';
 
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { COLORS } from '../theme/colors';
 import { DISMISS_METHODS } from '../types';
 import DismissBadge from '../components/DismissBadge';
 import { useAlarmStore } from '../store/alarmStore';
+import { startAlarm } from '../services/alarmAudio';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -43,39 +43,12 @@ export default function RingingScreen() {
   const { alarmId } = route.params;
 
   const alarm = useAlarmStore(s => s.alarms).find(a => a.id === alarmId);
-  const soundRef = useRef<Audio.Sound | null>(null);
 
-  // Load and play looping alarm audio on mount; unload on unmount
   useEffect(() => {
-    let mounted = true;
-
-    const loadSound = async () => {
-      try {
-        const { sound } = await Audio.Sound.createAsync(
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          require('../../assets/sounds/alarm.mp3'),
-          { isLooping: true, shouldPlay: true },
-        );
-        if (mounted) {
-          soundRef.current = sound;
-        } else {
-          await sound.unloadAsync();
-        }
-      } catch {
-        // Audio file may not exist — render screen normally without audio
-      }
-    };
-
-    loadSound();
-
-    return () => {
-      mounted = false;
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-        soundRef.current = null;
-      }
-    };
-  }, []);
+    startAlarm(alarmId);
+    // Don't stop on unmount — sound continues into challenge screens.
+    // Each unlock screen calls stopAlarm() on success.
+  }, [alarmId]);
 
   // ── No alarm found ──────────────────────────────────────────────────────────
   if (!alarm) {
