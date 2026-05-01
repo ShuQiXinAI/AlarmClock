@@ -3,10 +3,12 @@ import { AppState } from 'react-native';
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import notifee, { EventType } from '@notifee/react-native';
 import { setupNotifee } from './src/services/notifeeService';
 import { useAlarmStore } from './src/store/alarmStore';
 import AppNavigator, { RootStackParamList } from './src/navigation/AppNavigator';
+import { COLORS } from './src/theme/colors';
 
 export default function App() {
   const rescheduleAll = useAlarmStore(s => s.rescheduleAll);
@@ -88,6 +90,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
+        <StatusBar style="dark" backgroundColor={COLORS.bg} translucent={false} />
         <NavigationContainer ref={navRef}>
           <AppNavigator />
         </NavigationContainer>
