@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.alarmclock.app",
+      "package": "com.shuqixin.alarmclock",
       "permissions": [
         "RECEIVE_BOOT_COMPLETED",
         "USE_EXACT_ALARM",

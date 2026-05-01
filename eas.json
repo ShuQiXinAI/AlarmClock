@@ -9,8 +9,15 @@
       }
     },
     "production": {
+      "autoIncrement": "versionCode",
       "android": {
         "buildType": "app-bundle"
+      }
+    },
+    "production-apk": {
+      "autoIncrement": "versionCode",
+      "android": {
+        "buildType": "apk"
       }
     }
   }

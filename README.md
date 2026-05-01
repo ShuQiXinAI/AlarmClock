@@ -114,6 +114,11 @@ eas build --profile development --platform android   # 一次性
 npm start                                            # 后续就能热重载
 ```
 
+### 正式发版到应用市场
+- AAB（Google Play）: `eas build --platform android --profile production`
+- APK（国内市场）: `eas build --platform android --profile production-apk`
+- 详见 [`RELEASE.md`](./RELEASE.md) 完整发布流程
+
 ## 必需的 Android 权限
 
 App 启动后请到系统设置中授予：
@@ -136,6 +141,14 @@ App 启动后请到系统设置中授予：
 - [ ] 暗色模式 / 主题切换尚未做
 - [ ] 国产 ROM 自启动权限的引导界面缺失
 - [ ] 无云端同步 / 多设备共用闹钟
+
+## 上架相关文档
+
+| 文档 | 用途 |
+| --- | --- |
+| [`PRIVACY.md`](./PRIVACY.md) | 中文隐私政策（应用市场要求公网托管） |
+| [`LISTING.md`](./LISTING.md) | 各应用市场上架文案（标语、描述、权限审核话术等） |
+| [`RELEASE.md`](./RELEASE.md) | 完整发布 runbook（资质准备、构建、各市场提交、回滚） |
 
 ## 版本记录
 
