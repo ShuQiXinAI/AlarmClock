@@ -126,7 +126,10 @@ https://github.com/ShuQiXinAI/AlarmClock/commits/master/PRIVACY.md
 
 如对本政策有任何疑问，或希望举报隐私问题、行使你的权利，请通过以下方式联系：
 
-- **GitHub Issues**（推荐）：https://github.com/ShuQiXinAI/AlarmClock/issues
+- **邮箱**：shuqixin2026@163.com
+- **GitHub Issues**：https://github.com/ShuQiXinAI/AlarmClock/issues
+
+我们承诺在收到你的请求后 **5 个工作日内**回复。
 
 ---
 
