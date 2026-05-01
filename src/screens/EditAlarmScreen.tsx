@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,13 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
-  Platform,
 } from 'react-native';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
 import { COLORS } from '../theme/colors';
 import BackButton from '../components/BackButton';
 import DismissBadge from '../components/DismissBadge';
+import WheelPicker from '../components/WheelPicker';
 import { useAlarmStore } from '../store/alarmStore';
 import { DismissMethod, DISMISS_METHODS } from '../types';
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -27,13 +24,17 @@ type EditAlarmNav = StackNavigationProp<RootStackParamList>;
 const DISMISS_METHOD_KEYS: DismissMethod[] = ['math', 'blink', 'shake'];
 const DAY_LABELS = ['日', '一', '二', '三', '四', '五', '六'];
 
+const HOUR_VALUES = Array.from({ length: 24 }, (_, i) => i);
+const MINUTE_VALUES = Array.from({ length: 60 }, (_, i) => i);
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
 function parseTime(time: string): { hours: number; minutes: number } {
   const [h, m] = time.split(':').map(Number);
   return { hours: h ?? 7, minutes: m ?? 0 };
 }
 
 function formatTime(hours: number, minutes: number): string {
-  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  return `${pad2(hours)}:${pad2(minutes)}`;
 }
 
 export default function EditAlarmScreen() {
@@ -56,24 +57,11 @@ export default function EditAlarmScreen() {
   const [label, setLabel] = useState(existingAlarm?.label ?? '起床');
   const [method, setMethod] = useState<DismissMethod>(existingAlarm?.method ?? 'math');
   const [repeatDays, setRepeatDays] = useState<number[]>(existingAlarm?.repeatDays ?? []);
-  const [showPicker, setShowPicker] = useState(false);
 
-  // Build a Date carrying the currently-selected hours/minutes for the picker.
-  const pickerValue = useMemo(() => {
-    const d = new Date();
-    d.setHours(hours, minutes, 0, 0);
-    return d;
-  }, [hours, minutes]);
-
-  function onTimeChange(event: DateTimePickerEvent, date?: Date) {
-    // Android dismisses the dialog after selection ('set') or cancel ('dismissed').
-    // iOS keeps the spinner inline, so we leave it visible.
-    if (Platform.OS === 'android') setShowPicker(false);
-    if (event.type === 'set' && date) {
-      setHours(date.getHours());
-      setMinutes(date.getMinutes());
-    }
-  }
+  const incrementHours = () => setHours(h => (h + 1) % 24);
+  const decrementHours = () => setHours(h => (h - 1 + 24) % 24);
+  const incrementMinutes = () => setMinutes(m => (m + 1) % 60);
+  const decrementMinutes = () => setMinutes(m => (m - 1 + 60) % 60);
 
   function toggleDay(day: number) {
     setRepeatDays(prev =>
@@ -120,21 +108,43 @@ export default function EditAlarmScreen() {
         <Text style={styles.title}>{isEditing ? '编辑闹钟' : '设置闹钟'}</Text>
       </View>
 
-      {/* Time Picker — tap the time to open the native wheel picker. */}
-      <Pressable style={styles.timePicker} onPress={() => setShowPicker(true)}>
-        <Text style={styles.timeText}>{formatTime(hours, minutes)}</Text>
-        <Text style={styles.timeHint}>点击修改时间</Text>
-      </Pressable>
+      {/* Time Picker — two columns (hours / minutes), each with up/down
+          arrows for ±1 fine-tuning and a scrollable wheel for fast jumps. */}
+      <View style={styles.timePicker}>
+        <View style={styles.timeColumn}>
+          <Pressable onPress={incrementHours} hitSlop={8} style={styles.arrowBtn}>
+            <Text style={styles.arrowText}>▲</Text>
+          </Pressable>
+          <WheelPicker
+            values={HOUR_VALUES}
+            value={hours}
+            onChange={setHours}
+            format={pad2}
+          />
+          <Pressable onPress={decrementHours} hitSlop={8} style={styles.arrowBtn}>
+            <Text style={styles.arrowText}>▼</Text>
+          </Pressable>
+          <Text style={styles.unitLabel}>时</Text>
+        </View>
 
-      {showPicker && (
-        <DateTimePicker
-          mode="time"
-          display="spinner"
-          value={pickerValue}
-          is24Hour
-          onChange={onTimeChange}
-        />
-      )}
+        <Text style={styles.colon}>:</Text>
+
+        <View style={styles.timeColumn}>
+          <Pressable onPress={incrementMinutes} hitSlop={8} style={styles.arrowBtn}>
+            <Text style={styles.arrowText}>▲</Text>
+          </Pressable>
+          <WheelPicker
+            values={MINUTE_VALUES}
+            value={minutes}
+            onChange={setMinutes}
+            format={pad2}
+          />
+          <Pressable onPress={decrementMinutes} hitSlop={8} style={styles.arrowBtn}>
+            <Text style={styles.arrowText}>▼</Text>
+          </Pressable>
+          <Text style={styles.unitLabel}>分</Text>
+        </View>
+      </View>
 
       {/* Label */}
       <View style={styles.section}>
@@ -224,24 +234,41 @@ const styles = StyleSheet.create({
   },
   timePicker: {
     backgroundColor: COLORS.surface,
-    borderRadius: 16,
-    paddingVertical: 32,
-    paddingHorizontal: 20,
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
     marginBottom: 20,
     borderWidth: 1.5,
     borderColor: COLORS.border,
   },
-  timeText: {
-    fontSize: 72,
+  timeColumn: {
+    alignItems: 'center',
+  },
+  arrowBtn: {
+    paddingHorizontal: 24,
+    paddingVertical: 6,
+  },
+  arrowText: {
+    fontSize: 18,
+    color: COLORS.primary,
+    fontWeight: '700',
+  },
+  colon: {
+    fontSize: 44,
     fontWeight: '700',
     color: COLORS.primary,
-    letterSpacing: 4,
+    marginHorizontal: 6,
+    marginBottom: 24,
   },
-  timeHint: {
-    marginTop: 8,
-    fontSize: 13,
+  unitLabel: {
+    marginTop: 4,
+    fontSize: 12,
     color: COLORS.textMuted,
+    letterSpacing: 1,
   },
   section: {
     marginBottom: 20,
