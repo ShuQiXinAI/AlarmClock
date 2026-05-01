@@ -22,7 +22,7 @@
   1. 进入 https://github.com/ShuQiXinAI/AlarmClock/settings/pages
   2. Source 选 `Deploy from a branch`，Branch 选 `master` + `/ (root)`
   3. Save，等约 1 分钟
-  4. 验证可访问：https://shuqixinai.github.io/AlarmClock/PRIVACY
+  4. 验证可访问：https://shuqixinai.github.io/AlarmClock/PRIVACY/
 
 - [ ] **准备开发者邮箱**（不要用日常邮箱）
   - 建议注册一个专用邮箱，如 `appasyouself.alarm@outlook.com`
@@ -93,7 +93,7 @@ eas build --platform android --profile production-apk
    - 一句话简介：来自 `LISTING.md` §2
    - 应用描述：来自 `LISTING.md` §4
    - 应用图标 / 截图 / 横幅：见 `LISTING.md` §10
-   - 隐私政策 URL：https://shuqixinai.github.io/AlarmClock/PRIVACY
+   - 隐私政策 URL：https://shuqixinai.github.io/AlarmClock/PRIVACY/
    - 联系方式：开发者邮箱
 3. 上传 APK / AAB
 4. 上传软著证书（PDF）
