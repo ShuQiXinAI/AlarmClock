@@ -167,4 +167,7 @@ App 启动后请到系统设置中授予：
 
 ## License
 
-私有项目，暂未开源协议。
+源代码公开供审计，**版权归开发者所有**（All Rights Reserved）。
+未经书面许可，请勿用于二次发布或商业用途。允许个人学习、阅读、提交 Issue 与 PR。
+
+隐私政策（已托管至 GitHub Pages）：https://shuqixinai.github.io/AlarmClock/PRIVACY
