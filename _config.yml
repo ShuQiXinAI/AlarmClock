@@ -1,0 +1,31 @@
+title: 叫不醒你不罢休
+description: 一款"叫不醒你不罢休"的 Android 闹钟 App
+theme: jekyll-theme-cayman
+
+# Only render docs — skip the source code so Jekyll builds fast and
+# doesn't choke on TypeScript/Kotlin/asset files.
+include:
+  - PRIVACY.md
+  - LISTING.md
+  - RELEASE.md
+  - README.md
+
+exclude:
+  - App.tsx
+  - index.js
+  - babel.config.js
+  - eas.json
+  - app.json
+  - package.json
+  - package-lock.json
+  - tsconfig.json
+  - .npmrc
+  - design_decompressed.txt
+  - src/
+  - modules/
+  - plugins/
+  - __tests__/
+  - alarmclock-app/
+  - assets/sounds/
+  - docs/
+  - node_modules/
