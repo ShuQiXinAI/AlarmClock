@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,13 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  Platform,
 } from 'react-native';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import { COLORS } from '../theme/colors';
 import BackButton from '../components/BackButton';
 import DismissBadge from '../components/DismissBadge';
@@ -52,18 +56,23 @@ export default function EditAlarmScreen() {
   const [label, setLabel] = useState(existingAlarm?.label ?? '起床');
   const [method, setMethod] = useState<DismissMethod>(existingAlarm?.method ?? 'math');
   const [repeatDays, setRepeatDays] = useState<number[]>(existingAlarm?.repeatDays ?? []);
+  const [showPicker, setShowPicker] = useState(false);
 
-  function incrementHours() {
-    setHours(h => (h + 1) % 24);
-  }
-  function decrementHours() {
-    setHours(h => (h - 1 + 24) % 24);
-  }
-  function incrementMinutes() {
-    setMinutes(m => (m + 1) % 60);
-  }
-  function decrementMinutes() {
-    setMinutes(m => (m - 1 + 60) % 60);
+  // Build a Date carrying the currently-selected hours/minutes for the picker.
+  const pickerValue = useMemo(() => {
+    const d = new Date();
+    d.setHours(hours, minutes, 0, 0);
+    return d;
+  }, [hours, minutes]);
+
+  function onTimeChange(event: DateTimePickerEvent, date?: Date) {
+    // Android dismisses the dialog after selection ('set') or cancel ('dismissed').
+    // iOS keeps the spinner inline, so we leave it visible.
+    if (Platform.OS === 'android') setShowPicker(false);
+    if (event.type === 'set' && date) {
+      setHours(date.getHours());
+      setMinutes(date.getMinutes());
+    }
   }
 
   function toggleDay(day: number) {
@@ -111,35 +120,21 @@ export default function EditAlarmScreen() {
         <Text style={styles.title}>{isEditing ? '编辑闹钟' : '设置闹钟'}</Text>
       </View>
 
-      {/* Time Picker */}
-      <View style={styles.timePicker}>
-        {/* Increment row */}
-        <View style={styles.timeControls}>
-          <Pressable style={styles.arrowBtn} onPress={incrementHours}>
-            <Text style={styles.arrowText}>▲</Text>
-          </Pressable>
-          <View style={styles.timeSpacer} />
-          <Pressable style={styles.arrowBtn} onPress={incrementMinutes}>
-            <Text style={styles.arrowText}>▲</Text>
-          </Pressable>
-        </View>
+      {/* Time Picker — tap the time to open the native wheel picker. */}
+      <Pressable style={styles.timePicker} onPress={() => setShowPicker(true)}>
+        <Text style={styles.timeText}>{formatTime(hours, minutes)}</Text>
+        <Text style={styles.timeHint}>点击修改时间</Text>
+      </Pressable>
 
-        {/* Time display */}
-        <View style={styles.timeDisplay}>
-          <Text style={styles.timeText}>{formatTime(hours, minutes)}</Text>
-        </View>
-
-        {/* Decrement row */}
-        <View style={styles.timeControls}>
-          <Pressable style={styles.arrowBtn} onPress={decrementHours}>
-            <Text style={styles.arrowText}>▼</Text>
-          </Pressable>
-          <View style={styles.timeSpacer} />
-          <Pressable style={styles.arrowBtn} onPress={decrementMinutes}>
-            <Text style={styles.arrowText}>▼</Text>
-          </Pressable>
-        </View>
-      </View>
+      {showPicker && (
+        <DateTimePicker
+          mode="time"
+          display="spinner"
+          value={pickerValue}
+          is24Hour
+          onChange={onTimeChange}
+        />
+      )}
 
       {/* Label */}
       <View style={styles.section}>
@@ -230,36 +225,23 @@ const styles = StyleSheet.create({
   timePicker: {
     backgroundColor: COLORS.surface,
     borderRadius: 16,
-    padding: 20,
+    paddingVertical: 32,
+    paddingHorizontal: 20,
     alignItems: 'center',
     marginBottom: 20,
-  },
-  timeControls: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 48,
-  },
-  timeSpacer: {
-    width: 12,
-  },
-  arrowBtn: {
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-  },
-  arrowText: {
-    fontSize: 22,
-    color: COLORS.primary,
-    fontWeight: '700',
-  },
-  timeDisplay: {
-    paddingVertical: 12,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
   },
   timeText: {
     fontSize: 72,
     fontWeight: '700',
-    color: COLORS.text,
+    color: COLORS.primary,
     letterSpacing: 4,
+  },
+  timeHint: {
+    marginTop: 8,
+    fontSize: 13,
+    color: COLORS.textMuted,
   },
   section: {
     marginBottom: 20,
