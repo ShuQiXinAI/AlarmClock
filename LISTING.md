@@ -177,6 +177,6 @@
 1. 进入 https://github.com/ShuQiXinAI/AlarmClock/settings/pages
 2. Source 选 `Deploy from a branch`，Branch 选 `master` + `/ (root)`
 3. Save，等约 1 分钟
-4. 访问：https://shuqixinai.github.io/AlarmClock/PRIVACY 即可
+4. 访问：https://shuqixinai.github.io/AlarmClock/PRIVACY/ 即可
 
 > 如果你想要一个更专业的域名，可以买一个像 `appasyouself.com` 的域名指过来，但这不是必需的。
