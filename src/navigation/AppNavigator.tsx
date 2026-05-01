@@ -42,12 +42,12 @@ function TabNavigator() {
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopColor: COLORS.border,
-          height: 72,
-          paddingTop: 8,
-          paddingBottom: 12,
+          height: 62,
+          paddingTop: 6,
+          paddingBottom: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: '600',
           marginTop: 2,
         },
@@ -61,7 +61,7 @@ function TabNavigator() {
         component={HomeScreen}
         options={{
           tabBarLabel: '闹钟',
-          tabBarIcon: () => <Text style={{ fontSize: 28, lineHeight: 32 }}>🔔</Text>,
+          tabBarIcon: () => <Text style={{ fontSize: 24, lineHeight: 28 }}>🔔</Text>,
         }}
       />
       <Tab.Screen
@@ -69,7 +69,7 @@ function TabNavigator() {
         component={StatsScreen}
         options={{
           tabBarLabel: '成就',
-          tabBarIcon: () => <Text style={{ fontSize: 28, lineHeight: 32 }}>🏆</Text>,
+          tabBarIcon: () => <Text style={{ fontSize: 24, lineHeight: 28 }}>🏆</Text>,
         }}
       />
     </Tab.Navigator>
