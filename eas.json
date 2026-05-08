@@ -9,13 +9,13 @@
       }
     },
     "production": {
-      "autoIncrement": "versionCode",
+      "autoIncrement": true,
       "android": {
         "buildType": "app-bundle"
       }
     },
     "production-apk": {
-      "autoIncrement": "versionCode",
+      "autoIncrement": true,
       "android": {
         "buildType": "apk"
       }
