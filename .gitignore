@@ -35,3 +35,11 @@ Thumbs.db
 
 # Misc
 design_decompressed.txt
+
+# Signing keys & credentials — NEVER commit these.
+# They unlock the ability to publish updates as this app on the
+# stores; if leaked, anyone can ship malicious updates.
+*.jks
+*.keystore
+credentials.json
+google-services.json

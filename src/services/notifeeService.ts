@@ -71,6 +71,40 @@ export async function cancelAlarm(notifeeJobId: string): Promise<void> {
   await notifee.cancelTriggerNotification(notifeeJobId);
 }
 
+const TEST_ALARM_ID = 'test-alarm';
+
+// Schedules a quick smoke-test alarm 30 seconds out. No fullScreenAction
+// or pressAction so we don't accidentally trigger the routing pipeline
+// (the test alarm isn't in the alarmStore; RingingScreen would fail to
+// look it up). The user just needs to confirm "did I see/hear it."
+export async function scheduleTestAlarm(): Promise<void> {
+  await notifee.cancelTriggerNotification(TEST_ALARM_ID);
+  const timestamp = Date.now() + 30_000;
+  await notifee.createTriggerNotification(
+    {
+      id: TEST_ALARM_ID,
+      title: '测试闹钟 ⏰',
+      body: '如果你听到声音并看到这条通知，说明权限已配置正确。',
+      android: {
+        channelId: 'alarm',
+        importance: AndroidImportance.HIGH,
+        visibility: AndroidVisibility.PUBLIC,
+        category: AndroidCategory.ALARM,
+        sound: 'default',
+        autoCancel: true,
+      },
+    },
+    {
+      type: TriggerType.TIMESTAMP,
+      timestamp,
+      alarmManager: {
+        type: AlarmType.SET_EXACT_AND_ALLOW_WHILE_IDLE,
+        allowWhileIdle: true,
+      },
+    },
+  );
+}
+
 export async function rescheduleAllAlarms(alarms: Alarm[]): Promise<void> {
   for (const alarm of alarms) {
     if (!alarm.active) continue;

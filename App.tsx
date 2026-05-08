@@ -4,11 +4,21 @@ import { NavigationContainer, NavigationContainerRef } from '@react-navigation/n
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee, { EventType } from '@notifee/react-native';
 import { setupNotifee } from './src/services/notifeeService';
 import { useAlarmStore } from './src/store/alarmStore';
 import AppNavigator, { RootStackParamList } from './src/navigation/AppNavigator';
+import { PERMISSION_GUIDE_SEEN_KEY } from './src/screens/PermissionCheckScreen';
 import { COLORS } from './src/theme/colors';
+
+// Notification ids beginning with this prefix are smoke-test alarms
+// scheduled from the permission-check screen. They aren't backed by an
+// entry in the alarm store, so we must NOT route them to RingingScreen.
+const TEST_ALARM_PREFIX = 'test-alarm';
+
+const isRealAlarm = (id?: string | null): id is string =>
+  typeof id === 'string' && !id.startsWith(TEST_ALARM_PREFIX);
 
 export default function App() {
   const rescheduleAll = useAlarmStore(s => s.rescheduleAll);
@@ -31,7 +41,7 @@ export default function App() {
   const checkDisplayedAlarm = async () => {
     try {
       const displayed = await notifee.getDisplayedNotifications();
-      const alarm = displayed.find((d) => d.notification?.id);
+      const alarm = displayed.find((d) => isRealAlarm(d.notification?.id));
       if (alarm?.notification?.id) {
         goToRinging(alarm.notification.id);
       }
@@ -42,8 +52,15 @@ export default function App() {
     (async () => {
       await setupNotifee();
       await rescheduleAll();
+      // First-launch onboarding: send the user to the permission
+      // self-check screen so they configure required permissions
+      // before scheduling their first alarm.
+      const seen = await AsyncStorage.getItem(PERMISSION_GUIDE_SEEN_KEY);
+      if (!seen) {
+        setTimeout(() => navRef.current?.navigate('PermissionCheck'), 600);
+      }
       // Check once after navigator is ready.
-      setTimeout(checkDisplayedAlarm, 500);
+      setTimeout(checkDisplayedAlarm, 800);
     })();
 
     // Foreground event: fires when a trigger delivers a notification
@@ -51,16 +68,16 @@ export default function App() {
     // a heads-up notification while the app is open.
     const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
       const { notification } = detail;
-      if (!notification?.id) return;
+      if (!isRealAlarm(notification?.id)) return;
       if (type === EventType.DELIVERED || type === EventType.PRESS) {
-        goToRinging(notification.id);
+        goToRinging(notification!.id!);
       }
     });
 
     // Cold-start launch via notification press.
     notifee.getInitialNotification().then((initial) => {
-      if (initial?.notification?.id) {
-        setTimeout(() => goToRinging(initial.notification.id!), 500);
+      if (isRealAlarm(initial?.notification?.id)) {
+        setTimeout(() => goToRinging(initial!.notification.id!), 500);
       }
     });
 

@@ -11,6 +11,7 @@ import ShakeUnlockScreen from '../screens/ShakeUnlockScreen';
 import BlinkUnlockScreen from '../screens/BlinkUnlockScreen';
 import SuccessScreen from '../screens/SuccessScreen';
 import StatsScreen from '../screens/StatsScreen';
+import PermissionCheckScreen from '../screens/PermissionCheckScreen';
 
 // ─── Param Lists ────────────────────────────────────────────────────────────
 
@@ -27,6 +28,7 @@ export type RootStackParamList = {
   ShakeUnlock: { alarmId: string };
   BlinkUnlock: { alarmId: string };
   Success: undefined;
+  PermissionCheck: undefined;
 };
 
 // ─── Navigators ──────────────────────────────────────────────────────────────
@@ -86,6 +88,7 @@ export default function AppNavigator() {
       <Stack.Screen name="ShakeUnlock" component={ShakeUnlockScreen} />
       <Stack.Screen name="BlinkUnlock" component={BlinkUnlockScreen} />
       <Stack.Screen name="Success" component={SuccessScreen} />
+      <Stack.Screen name="PermissionCheck" component={PermissionCheckScreen} />
     </Stack.Navigator>
   );
 }
